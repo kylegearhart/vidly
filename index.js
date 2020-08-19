@@ -45,3 +45,21 @@ app.get('/api/genres/:id', (request, response) => {
 
   return response.send(genreWithId)
 })
+
+app.put('/api/genres/:id', (request, response) => {
+  const genreSchema = Joi.object({
+    name: Joi.string().min(2).required()
+  })
+  const validationResult = genreSchema.validate(request.body)
+
+  if (validationResult.error) return response.status(400).send(validationResult.error.message)
+
+  const genreId = parseInt(request.params.id)
+  const genreWithId = genres.find((genre) => genre.id === genreId)
+
+  if (!genreWithId) return response.status(404).send(genreWithId)
+
+  genreWithId.name = request.body.name
+
+  return response.send(genreWithId)
+})
