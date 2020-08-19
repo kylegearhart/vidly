@@ -63,3 +63,15 @@ app.put('/api/genres/:id', (request, response) => {
 
   return response.send(genreWithId)
 })
+
+app.delete('/api/genres/:id', (request, response) => {
+  const genreId = parseInt(request.params.id)
+  const genreWithId = genres.find((genre) => genre.id === genreId)
+
+  if (!genreWithId) return response.status(404).send('A genre with the given Id does not exist.')
+
+  const genreIndex = genres.findIndex((genre) => genre.id === genreId)
+  genres.splice(genreIndex, 1)
+
+  return response.send(genreWithId)
+})
