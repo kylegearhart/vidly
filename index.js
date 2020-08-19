@@ -7,6 +7,6 @@ const port = process.env.PORT || 3000
 app.listen(
   3000,
   () => {
-    logger(`Vidley launched and listening on port ${port}.`)
+    logger(`Vidly launched and listening on port ${port}.`)
   },
 )
