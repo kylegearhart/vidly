@@ -19,12 +19,16 @@ const genres = [
   { id: 3, name: 'Drama' },
 ]
 
-app.post('/api/genres', (request, response) => {
+function validateGenre(genre) {
   const genreSchema = Joi.object({
     name: Joi.string().min(2).required()
   })
-  const validationResult = genreSchema.validate(request.body)
 
+  return genreSchema.validate(genre)
+}
+
+app.post('/api/genres', (request, response) => {
+  let validationResult = validateGenre(request.body)
   if (validationResult.error) return response.status(400).send(validationResult.error.message)
 
   const newGenre = { id: genres.length + 1, name: request.body.name }
@@ -47,11 +51,7 @@ app.get('/api/genres/:id', (request, response) => {
 })
 
 app.put('/api/genres/:id', (request, response) => {
-  const genreSchema = Joi.object({
-    name: Joi.string().min(2).required()
-  })
-  const validationResult = genreSchema.validate(request.body)
-
+  let validationResult = validateGenre(request.body)
   if (validationResult.error) return response.status(400).send(validationResult.error.message)
 
   const genreId = parseInt(request.params.id)
