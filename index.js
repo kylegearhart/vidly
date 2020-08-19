@@ -41,7 +41,7 @@ app.get('/api/genres/:id', (request, response) => {
   const genreId = parseInt(request.params.id)
   const genreWithId = genres.find((genre) => genre.id === genreId)
 
-  if (!genreWithId) return response.status(404).send(genreWithId)
+  if (!genreWithId) return response.status(404).send('A genre with the given Id does not exist.')
 
   return response.send(genreWithId)
 })
@@ -57,7 +57,7 @@ app.put('/api/genres/:id', (request, response) => {
   const genreId = parseInt(request.params.id)
   const genreWithId = genres.find((genre) => genre.id === genreId)
 
-  if (!genreWithId) return response.status(404).send(genreWithId)
+  if (!genreWithId) return response.status(404).send('A genre with the given Id does not exist.')
 
   genreWithId.name = request.body.name
 
