@@ -20,3 +20,12 @@ const genres = [
 app.get('/api/genres', (request, response) => {
   response.send(genres)
 })
+
+app.get('/api/genres/:id', (request, response) => {
+  const genreId = parseInt(request.params.id)
+  const genreWithId = genres.find((genre) => genre.id === genreId)
+
+  if (!genreWithId) return response.status(404).send(genreWithId)
+
+  return response.send(genreWithId)
+})
