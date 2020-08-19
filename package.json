@@ -1,0 +1,11 @@
+{
+  "name": "vidley",
+  "version": "1.0.0",
+  "description": "An app for renting movies (built while doing the Coding with Mosh course on Node.js.)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kyle Gearhart",
+  "license": "MIT"
+}
