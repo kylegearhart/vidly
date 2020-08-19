@@ -5,7 +5,7 @@ const app = express()
 const port = process.env.PORT || 3000
 
 app.listen(
-  3000,
+  port,
   () => {
     logger(`Vidly launched and listening on port ${port}.`)
   },
