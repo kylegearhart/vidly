@@ -1,30 +1,23 @@
 const Genre = require('./genre')
+const repository = require('./genreRepository')
 const express = require('express')
 const router = express.Router()
-
-const genres = [
-  { id: 1, name: 'Sci-Fi' },
-  { id: 2, name: 'Comedy' },
-  { id: 3, name: 'Drama' },
-]
 
 router.post('/', (request, response) => {
   let validationResult = Genre.validateGenre(request.body)
   if (validationResult.error) return response.status(400).send(validationResult.error.message)
 
-  const newGenre = { id: genres.length + 1, name: request.body.name }
-  genres.push(newGenre)
+  const genreAdded = repository.add(request.body)
 
-  return response.send(newGenre)
+  return response.send(genreAdded)
 })
 
 router.get('/', (request, response) => {
-  response.send(genres)
+  response.send(repository.getAll())
 })
 
 router.get('/:id', (request, response) => {
-  const genreId = parseInt(request.params.id)
-  const genreWithId = genres.find((genre) => genre.id === genreId)
+  const genreWithId = repository.genreForId(parseInt(request.params.id))
 
   if (!genreWithId) return response.status(404).send('A genre with the given Id does not exist.')
 
@@ -36,23 +29,22 @@ router.put('/:id', (request, response) => {
   if (validationResult.error) return response.status(400).send(validationResult.error.message)
 
   const genreId = parseInt(request.params.id)
-  const genreWithId = genres.find((genre) => genre.id === genreId)
+  const genreWithId = repository.genreForId(genreId)
 
   if (!genreWithId) return response.status(404).send('A genre with the given Id does not exist.')
 
-  genreWithId.name = request.body.name
+  const updatedGenre = repository.updateGenreWithId(genreId, request.body)
 
-  return response.send(genreWithId)
+  return response.send(updatedGenre)
 })
 
 router.delete('/:id', (request, response) => {
   const genreId = parseInt(request.params.id)
-  const genreWithId = genres.find((genre) => genre.id === genreId)
+  const genreWithId = repository.genreForId(genreId)
 
   if (!genreWithId) return response.status(404).send('A genre with the given Id does not exist.')
 
-  const genreIndex = genres.findIndex((genre) => genre.id === genreId)
-  genres.splice(genreIndex, 1)
+  repository.deleteGenreWithId(genreId)
 
   return response.send(genreWithId)
 })
