@@ -1,6 +1,6 @@
+const Genre = require('./genre')
 const express = require('express')
 const router = express.Router()
-const Joi = require('joi')
 
 const genres = [
   { id: 1, name: 'Sci-Fi' },
@@ -9,7 +9,7 @@ const genres = [
 ]
 
 router.post('/', (request, response) => {
-  let validationResult = validateGenre(request.body)
+  let validationResult = Genre.validateGenre(request.body)
   if (validationResult.error) return response.status(400).send(validationResult.error.message)
 
   const newGenre = { id: genres.length + 1, name: request.body.name }
@@ -32,7 +32,7 @@ router.get('/:id', (request, response) => {
 })
 
 router.put('/:id', (request, response) => {
-  let validationResult = validateGenre(request.body)
+  let validationResult = Genre.validateGenre(request.body)
   if (validationResult.error) return response.status(400).send(validationResult.error.message)
 
   const genreId = parseInt(request.params.id)
@@ -56,13 +56,5 @@ router.delete('/:id', (request, response) => {
 
   return response.send(genreWithId)
 })
-
-function validateGenre(genre) {
-  const genreSchema = Joi.object({
-    name: Joi.string().min(2).required()
-  })
-
-  return genreSchema.validate(genre)
-}
 
 module.exports = router
