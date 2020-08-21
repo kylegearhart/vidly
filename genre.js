@@ -2,7 +2,12 @@ const mongoose = require('mongoose')
 const Joi = require('joi')
 
 const genre = mongoose.Schema({
-  name: { type: String, required: true },
+  name: {
+    type: String,
+    minlength: 2,
+    maxlength: 30,
+    required: true
+  },
 })
 
 function validateGenre(genre) {
