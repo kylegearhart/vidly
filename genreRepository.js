@@ -1,36 +1,35 @@
-const genres = [
-  { id: 1, name: 'Sci-Fi' },
-  { id: 2, name: 'Comedy' },
-  { id: 3, name: 'Drama' },
-]
+const mongoose = require('mongoose')
+const genre = require('./genre')
 
 function add(newGenre) {
-  const genre = { id: genres.length + 1, name: newGenre.name }
+  const genreToAdd = new genre.Genre({
+    name: newGenre.name
+  })
 
-  genres.push(genre)
-
-  return genre
+  return genreToAdd.save()
 }
 
 function getAll() {
-  return genres
+  return genre.Genre.find({})
 }
 
-function genreForId(id) {
-  return genres.find((genre) => genre.id === id)
+function genreForId(idAsString) {
+  return genre.Genre.findById(mongoose.Types.ObjectId(idAsString))
 }
 
-function deleteGenreWithId(id) {
-  const indexOfGenre = genres.findIndex((genre) => genre.id === id)
-  genres.splice(indexOfGenre, 1)
+function deleteGenreWithId(idAsString) {
+  return genre.Genre.findByIdAndRemove(mongoose.Types.ObjectId(idAsString))
 }
 
-function updateGenreWithId(genreId, updatedGenreProperties) {
-  const genreToUpdate = genreForId(genreId)
+function updateGenreWithId(idAsString, updatedGenreProperties) {
+  return genreForId(idAsString)
+    .then((genreWithId) => {
+      if (!genreWithId) return null
 
-  genreToUpdate.name = updatedGenreProperties.name
+      genreWithId.name = updatedGenreProperties.name
 
-  return genreToUpdate
+      return genreWithId.save()
+    })
 }
 
 module.exports = { add, getAll, genreForId, deleteGenreWithId, updateGenreWithId }

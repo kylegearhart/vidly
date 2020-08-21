@@ -1,3 +1,4 @@
+const errorLogger = require('debug')('app:error')
 const Genre = require('./genre')
 const repository = require('./genreRepository')
 const express = require('express')
@@ -7,46 +8,67 @@ router.post('/', (request, response) => {
   let validationResult = Genre.validateGenre(request.body)
   if (validationResult.error) return response.status(400).send(validationResult.error.message)
 
-  const genreAdded = repository.add(request.body)
+  return repository
+    .add(request.body)
+    .then((savedOrUpdatedGenre) => {
+      if (!savedOrUpdatedGenre) return response.status(500).send('Genre save was unsuccessful.')
 
-  return response.send(genreAdded)
+      return response.send(savedOrUpdatedGenre)
+    })
 })
 
 router.get('/', (request, response) => {
-  response.send(repository.getAll())
+  return repository
+    .getAll()
+    .select({ name: 1 })
+    .then((result) => response.send(result))
+    .catch((error) => {
+      errorLogger(error.message)
+      response.status(500).send('Genre list retrieval for Id was unsuccessful.')
+    })
 })
 
 router.get('/:id', (request, response) => {
-  const genreWithId = repository.genreForId(parseInt(request.params.id))
+  return repository
+    .genreForId(request.params.id)
+    .then((genreWithId) => {
+      if (!genreWithId) return response.status(404).send('A genre with the given Id does not exist.')
 
-  if (!genreWithId) return response.status(404).send('A genre with the given Id does not exist.')
-
-  return response.send(genreWithId)
+      return response.send(genreWithId)
+    })
+    .catch((error) => {
+      errorLogger(error.message)
+      response.status(500).send('Genre retrieval for Id was unsuccessful.')
+    })
 })
 
 router.put('/:id', (request, response) => {
   let validationResult = Genre.validateGenre(request.body)
   if (validationResult.error) return response.status(400).send(validationResult.error.message)
 
-  const genreId = parseInt(request.params.id)
-  const genreWithId = repository.genreForId(genreId)
+  return repository.updateGenreWithId(request.params.id, request.body)
+    .then((updatedGenre) => {
+      if (!updatedGenre) return response.status(500).send('Genre update was unsuccessful.')
 
-  if (!genreWithId) return response.status(404).send('A genre with the given Id does not exist.')
-
-  const updatedGenre = repository.updateGenreWithId(genreId, request.body)
-
-  return response.send(updatedGenre)
+      return response.send(updatedGenre)
+    })
+    .catch((error) => {
+      errorLogger(error.message)
+      response.status(500).send('Genre update was unsuccessful.')
+    })
 })
 
 router.delete('/:id', (request, response) => {
-  const genreId = parseInt(request.params.id)
-  const genreWithId = repository.genreForId(genreId)
+  return repository.deleteGenreWithId(request.params.id)
+    .then((deletedGenre) => {
+      if (!deletedGenre) return response.status(404).send('A genre with the given Id does not exist.')
 
-  if (!genreWithId) return response.status(404).send('A genre with the given Id does not exist.')
-
-  repository.deleteGenreWithId(genreId)
-
-  return response.send(genreWithId)
+      return response.send(deletedGenre)
+    })
+    .catch((error) => {
+      errorLogger(error.message)
+      response.status(500).send('Genre retrieval for Id was unsuccessful.')
+    })
 })
 
 module.exports = router
