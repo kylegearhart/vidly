@@ -17,15 +17,15 @@ router.post('/', (request, response) => {
     })
 })
 
-router.get('/', (request, response) => {
-  return repository
-    .getAll()
-    .select({ name: 1 })
-    .then((result) => response.send(result))
-    .catch((error) => {
-      errorLogger(error.message)
-      response.status(500).send('Genre list retrieval for Id was unsuccessful.')
-    })
+router.get('/', async (request, response) => {
+  try {
+    const result = await repository.getAll().select({ name: 1 })
+
+    return response.send(result)
+  } catch (error) {
+    errorLogger(error.message)
+    response.status(500).send('Genre list retrieval for Id was unsuccessful.')
+  }
 })
 
 router.get('/:id', (request, response) => {
