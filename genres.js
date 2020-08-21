@@ -44,20 +44,20 @@ router.get('/:id', async (request, response) => {
   }
 })
 
-router.put('/:id', (request, response) => {
+router.put('/:id', async (request, response) => {
   let validationResult = Genre.validateGenre(request.body)
   if (validationResult.error) return response.status(400).send(validationResult.error.message)
 
-  return repository.updateGenreWithId(request.params.id, request.body)
-    .then((updatedGenre) => {
-      if (!updatedGenre) return response.status(500).send('Genre update was unsuccessful.')
+  try {
+    const updatedGenre = await repository.updateGenreWithId(request.params.id, request.body)
 
-      return response.send(updatedGenre)
-    })
-    .catch((error) => {
-      errorLogger(error.message)
-      response.status(500).send('Genre update was unsuccessful.')
-    })
+    if (!updatedGenre) return response.status(500).send('Genre update was unsuccessful.')
+
+    return response.send(updatedGenre)
+  } catch (error) {
+    errorLogger(error.message)
+    return response.status(500).send('Genre update was unsuccessful.')
+  }
 })
 
 router.delete('/:id', async (request, response) => {

@@ -3,7 +3,7 @@ const genre = require('./genre')
 
 function add(newGenre) {
   const genreToAdd = new genre.Genre({
-    name: newGenre.name
+    name: newGenre.name,
   })
 
   return genreToAdd.save()
@@ -21,15 +21,14 @@ function deleteGenreWithId(idAsString) {
   return genre.Genre.findByIdAndRemove(mongoose.Types.ObjectId(idAsString))
 }
 
-function updateGenreWithId(idAsString, updatedGenreProperties) {
-  return genreForId(idAsString)
-    .then((genreWithId) => {
-      if (!genreWithId) return null
+async function updateGenreWithId(idAsString, updatedGenreProperties) {
+  const genreWithId = await genreForId(idAsString)
 
-      genreWithId.name = updatedGenreProperties.name
+  if (!genreWithId) return null
 
-      return genreWithId.save()
-    })
+  genreWithId.name = updatedGenreProperties.name
+
+  return genreWithId.save()
 }
 
 module.exports = { add, getAll, genreForId, deleteGenreWithId, updateGenreWithId }
