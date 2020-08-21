@@ -1,2 +1,3 @@
 Error-handling
 - Validate incoming MongoDB Ids
+- Send back different response for failure to find genre for update and failures to update
