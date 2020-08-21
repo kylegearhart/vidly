@@ -4,17 +4,20 @@ const repository = require('./genreRepository')
 const express = require('express')
 const router = express.Router()
 
-router.post('/', (request, response) => {
+router.post('/', async (request, response) => {
   let validationResult = Genre.validateGenre(request.body)
   if (validationResult.error) return response.status(400).send(validationResult.error.message)
 
-  return repository
-    .add(request.body)
-    .then((savedOrUpdatedGenre) => {
-      if (!savedOrUpdatedGenre) return response.status(500).send('Genre save was unsuccessful.')
+  try {
+    const savedOrUpdatedGenre = await repository.add(request.body)
 
-      return response.send(savedOrUpdatedGenre)
-    })
+    if (!savedOrUpdatedGenre) return response.status(500).send('Genre save was unsuccessful.')
+
+    return response.send(savedOrUpdatedGenre)
+  } catch (error) {
+    errorLogger(error.message)
+    response.status(500).send('Genre creation was unsuccessful.')
+  }
 })
 
 router.get('/', async (request, response) => {
