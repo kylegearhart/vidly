@@ -16,7 +16,7 @@ router.post('/', async (request, response) => {
     return response.send(savedOrUpdatedGenre)
   } catch (error) {
     errorLogger(error.message)
-    response.status(500).send('Genre creation was unsuccessful.')
+    return response.status(500).send('Genre creation was unsuccessful.')
   }
 })
 
@@ -27,7 +27,7 @@ router.get('/', async (request, response) => {
     return response.send(result)
   } catch (error) {
     errorLogger(error.message)
-    response.status(500).send('Genre list retrieval for Id was unsuccessful.')
+    return response.status(500).send('Genre list retrieval for Id was unsuccessful.')
   }
 })
 
@@ -40,7 +40,7 @@ router.get('/:id', async (request, response) => {
     return response.send(genreWithId)
   } catch (error) {
     errorLogger(error.message)
-    response.status(500).send('Genre retrieval for Id was unsuccessful.')
+    return response.status(500).send('Genre retrieval for Id was unsuccessful.')
   }
 })
 
@@ -69,7 +69,7 @@ router.delete('/:id', async (request, response) => {
     return response.send(deletedGenre)
   } catch (error) {
     errorLogger(error.message)
-    response.status(500).send('Genre deletion for Id was unsuccessful.')
+    return response.status(500).send('Genre deletion for Id was unsuccessful.')
   }
 })
 
