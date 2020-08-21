@@ -31,18 +31,17 @@ router.get('/', async (request, response) => {
   }
 })
 
-router.get('/:id', (request, response) => {
-  return repository
-    .genreForId(request.params.id)
-    .then((genreWithId) => {
-      if (!genreWithId) return response.status(404).send('A genre with the given Id does not exist.')
+router.get('/:id', async (request, response) => {
+  try {
+    const genreWithId = await repository.genreForId(request.params.id)
 
-      return response.send(genreWithId)
-    })
-    .catch((error) => {
-      errorLogger(error.message)
-      response.status(500).send('Genre retrieval for Id was unsuccessful.')
-    })
+    if (!genreWithId) return response.status(404).send('A genre with the given Id does not exist.')
+
+    return response.send(genreWithId)
+  } catch (error) {
+    errorLogger(error.message)
+    response.status(500).send('Genre retrieval for Id was unsuccessful.')
+  }
 })
 
 router.put('/:id', (request, response) => {
