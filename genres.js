@@ -60,17 +60,17 @@ router.put('/:id', (request, response) => {
     })
 })
 
-router.delete('/:id', (request, response) => {
-  return repository.deleteGenreWithId(request.params.id)
-    .then((deletedGenre) => {
-      if (!deletedGenre) return response.status(404).send('A genre with the given Id does not exist.')
+router.delete('/:id', async (request, response) => {
+  try {
+    const deletedGenre = await repository.deleteGenreWithId(request.params.id)
 
-      return response.send(deletedGenre)
-    })
-    .catch((error) => {
-      errorLogger(error.message)
-      response.status(500).send('Genre retrieval for Id was unsuccessful.')
-    })
+    if (!deletedGenre) return response.status(404).send('A genre with the given Id does not exist.')
+
+    return response.send(deletedGenre)
+  } catch (error) {
+    errorLogger(error.message)
+    response.status(500).send('Genre deletion for Id was unsuccessful.')
+  }
 })
 
 module.exports = router
