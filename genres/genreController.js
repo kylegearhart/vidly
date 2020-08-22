@@ -1,11 +1,11 @@
 const errorLogger = require('debug')('app:error')
-const Genre = require('./genre')
+const { validateAsGenre } = require('./genre')
 const repository = require('./genreRepository')
 const express = require('express')
 const router = express.Router()
 
 router.post('/', async (request, response) => {
-  let validationResult = Genre.validateAsGenre(request.body)
+  let validationResult = validateAsGenre(request.body)
   if (validationResult.error) return response.status(400).send(validationResult.error.message)
 
   try {
@@ -45,7 +45,7 @@ router.get('/:id', async (request, response) => {
 })
 
 router.put('/:id', async (request, response) => {
-  let validationResult = Genre.validateAsGenre(request.body)
+  let validationResult = validateAsGenre(request.body)
   if (validationResult.error) return response.status(400).send(validationResult.error.message)
 
   try {

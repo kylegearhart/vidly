@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
-const genre = require('./genre')
+const { Genre } = require('./genre')
 
 function add(newGenre) {
-  const genreToAdd = new genre.Genre({
+  const genreToAdd = new Genre({
     name: newGenre.name,
   })
 
@@ -10,19 +10,19 @@ function add(newGenre) {
 }
 
 function getAll() {
-  return genre.Genre.find({}).select({ name: 1 }).sort('name')
+  return Genre.find({}).select({ name: 1 }).sort('name')
 }
 
 function genreForId(idAsString) {
-  return genre.Genre.findById(mongoose.Types.ObjectId(idAsString))
+  return Genre.findById(mongoose.Types.ObjectId(idAsString))
 }
 
 function deleteGenreWithId(idAsString) {
-  return genre.Genre.findByIdAndRemove(mongoose.Types.ObjectId(idAsString))
+  return Genre.findByIdAndRemove(mongoose.Types.ObjectId(idAsString))
 }
 
 function updateGenreWithId(idAsString, genreProperties) {
-  return genre.Genre.findByIdAndUpdate(
+  return Genre.findByIdAndUpdate(
     mongoose.Types.ObjectId(idAsString),
     genreProperties,
     { new: true },
