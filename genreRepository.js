@@ -22,15 +22,11 @@ function deleteGenreWithId(idAsString) {
 }
 
 async function updateGenreWithId(idAsString, genreProperties) {
-  const updatedGenre = await genre.Genre.findByIdAndUpdate(
+  return genre.Genre.findByIdAndUpdate(
     mongoose.Types.ObjectId(idAsString),
     genreProperties,
     { new: true },
   )
-
-  if (!updatedGenre) return null
-
-  return updatedGenre
 }
 
 module.exports = { add, getAll, genreForId, deleteGenreWithId, updateGenreWithId }
