@@ -3,3 +3,4 @@ Error-handling
 - Stop using module.exports (migrate to ES6 syntax)
 - Stop using require('') (migrate to ES6 syntax)
 - Allow only partial PUT for customer (e.g. only update a name, phone, etc.)
+- Find a Node convention for keeping code organized by feature (e.g. customers, genres)
