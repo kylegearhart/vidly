@@ -2,7 +2,7 @@ const httpLogger = require('debug')('app:http')
 const dbLogger = require('debug')('app:db')
 const express = require('express')
 const mongoose = require('mongoose')
-const genres = require('./genres')
+const genres = require('./genres/genres')
 const port = process.env.PORT || 3000
 
 const app = express()
