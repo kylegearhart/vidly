@@ -10,7 +10,7 @@ function add(newGenre) {
 }
 
 function getAll() {
-  return genre.Genre.find({}).sort('name')
+  return genre.Genre.find({}).select({ name: 1 }).sort('name')
 }
 
 function genreForId(idAsString) {

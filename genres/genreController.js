@@ -22,7 +22,7 @@ router.post('/', async (request, response) => {
 
 router.get('/', async (request, response) => {
   try {
-    const result = await repository.getAll().select({ name: 1 })
+    const result = await repository.getAll()
 
     return response.send(result)
   } catch (error) {
