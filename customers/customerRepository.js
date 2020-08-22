@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
-const customer = require('./customer')
+const { Customer } = require('./customer')
 
 function add(newCustomer) {
-  const customerToAdd = new customer.Customer({
+  const customerToAdd = new Customer({
     isGold: newCustomer.isGold,
     name: newCustomer.name,
     phone: newCustomer.phone,
@@ -12,19 +12,19 @@ function add(newCustomer) {
 }
 
 function getAll() {
-  return customer.Customer.find({}).sort('name').select({ name: 1, isGold: 1, phone: 1 })
+  return Customer.find({}).sort('name').select({ name: 1, isGold: 1, phone: 1 })
 }
 
 function customerForId(idAsString) {
-  return customer.Customer.findById(mongoose.Types.ObjectId(idAsString))
+  return Customer.findById(mongoose.Types.ObjectId(idAsString))
 }
 
 function deleteCustomerWithId(idAsString) {
-  return customer.Customer.findByIdAndRemove(mongoose.Types.ObjectId(idAsString))
+  return Customer.findByIdAndRemove(mongoose.Types.ObjectId(idAsString))
 }
 
 function updateCustomerWithId(idAsString, customerProperties) {
-  return customer.Customer.findByIdAndUpdate(
+  return Customer.findByIdAndUpdate(
     mongoose.Types.ObjectId(idAsString),
     customerProperties,
     { new: true },

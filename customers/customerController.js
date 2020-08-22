@@ -1,11 +1,11 @@
 const errorLogger = require('debug')('app:error')
-const Customer = require('./customer')
+const { validateAsCustomer } = require('./customer')
 const repository = require('./customerRepository')
 const express = require('express')
 const router = express.Router()
 
 router.post('/', async (request, response) => {
-  let validationResult = Customer.validateAsCustomer(request.body)
+  let validationResult = validateAsCustomer(request.body)
   if (validationResult.error) return response.status(400).send(validationResult.error.message)
 
   try {
@@ -45,7 +45,7 @@ router.get('/:id', async (request, response) => {
 })
 
 router.put('/:id', async (request, response) => {
-  let validationResult = Customer.validateAsCustomer(request.body)
+  let validationResult = validateAsCustomer(request.body)
   if (validationResult.error) return response.status(400).send(validationResult.error.message)
 
   try {
