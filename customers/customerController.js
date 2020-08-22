@@ -27,7 +27,7 @@ router.get('/', async (request, response) => {
     return response.send(result)
   } catch (error) {
     errorLogger(error.message)
-    return response.status(500).send('Customer list retrieval for Id was unsuccessful.')
+    return response.status(500).send('Customer list retrieval was unsuccessful.')
   }
 })
 
