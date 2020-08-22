@@ -1,2 +1,4 @@
 Error-handling
 - Validate incoming MongoDB Ids
+- Stop using module.exports (migrate to ES6 syntax)
+- Stop using require('') (migrate to ES6 syntax)
