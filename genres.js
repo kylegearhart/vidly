@@ -51,7 +51,7 @@ router.put('/:id', async (request, response) => {
   try {
     const updatedGenre = await repository.updateGenreWithId(request.params.id, request.body)
 
-    if (!updatedGenre) return response.status(500).send('Genre update was unsuccessful.')
+    if (!updatedGenre) return response.status(404).send('A genre with the given Id does not exist.')
 
     return response.send(updatedGenre)
   } catch (error) {
