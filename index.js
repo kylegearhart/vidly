@@ -3,11 +3,13 @@ const dbLogger = require('debug')('app:db')
 const express = require('express')
 const mongoose = require('mongoose')
 const genres = require('./genres/genreController')
+const customers = require('./customers/customerController')
 const port = process.env.PORT || 3000
 
 const app = express()
 app.use(express.json())
 app.use('/api/genres', genres)
+app.use('/api/customers', customers)
 
 const mongoDBOptions = { useNewUrlParser: true, useUnifiedTopology: true }
 mongoose.connect('mongodb://localhost/vidly', mongoDBOptions)
