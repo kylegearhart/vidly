@@ -21,7 +21,7 @@ function deleteGenreWithId(idAsString) {
   return genre.Genre.findByIdAndRemove(mongoose.Types.ObjectId(idAsString))
 }
 
-async function updateGenreWithId(idAsString, genreProperties) {
+function updateGenreWithId(idAsString, genreProperties) {
   return genre.Genre.findByIdAndUpdate(
     mongoose.Types.ObjectId(idAsString),
     genreProperties,
