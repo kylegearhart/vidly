@@ -1,7 +1,6 @@
 const { genreSchema } = require('../genres/genre')
 const mongoose = require('mongoose')
 const Joi = require('joi')
-Joi.objectId = require('joi-objectid')(Joi)
 
 Movie = mongoose.model('Movie', {
   title: { type: String, minlength: 5, maxlength: 50, required: true },
