@@ -9,6 +9,7 @@
   "author": "Kyle Gearhart",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "debug": "^4.1.1",
     "express": "^4.17.1",
     "joi": "^17.2.1",
