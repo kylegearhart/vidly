@@ -16,10 +16,15 @@ router.post('/', async (request, response) => {
   const movieWithId = await movieRepository.movieForId(request.body.movieId)
   if (!movieWithId) return response.status(404).send('A movie with the given Id does not exist.')
 
+  if (movieWithId.numberInStock === 0) return response.status(400).send('No copies of that movie are available.')
+
   try {
     const savedOrUpdatedRental = await rentalRepository.add(request.body, customerWithId, movieWithId)
 
     if (!savedOrUpdatedRental) return response.status(500).send('Rental save was unsuccessful.')
+
+    movieWithId.numberInStock -= 1
+    await movieRepository.updateMovieWithId(movieWithId.id, movieWithId)
 
     return response.send(savedOrUpdatedRental)
   } catch (error) {
