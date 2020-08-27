@@ -4,6 +4,7 @@ const repository = require('./userRepository')
 const express = require('express')
 const router = express.Router()
 const _ = require('lodash')
+const bcrypt = require('bcrypt')
 
 router.post('/', async (request, response) => {
   let validationResult = validateAsUser(request.body)
@@ -13,7 +14,11 @@ router.post('/', async (request, response) => {
     const duplicatedUser = await User.findOne({ email: request.body.email })
     if (duplicatedUser) return response.status(400).send('User with email already exists.')
 
-    const savedOrUpdatedUser = await repository.add(_.pick(request.body, ['name', 'email', 'password']))
+    const newUser = _.pick(request.body, ['name', 'email', 'password'])
+    const salt = await bcrypt.genSalt(10)
+    newUser.password = await bcrypt.hash(newUser.password, salt)
+
+    const savedOrUpdatedUser = await repository.add(newUser)
     if (!savedOrUpdatedUser) return response.status(500).send('User save was unsuccessful.')
 
     return response.send(_.pick(savedOrUpdatedUser, ['name', 'email']))
