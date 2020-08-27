@@ -26,7 +26,6 @@ function getAll() {
 function movieForId(idAsString) {
   return Movie.findById(mongoose.Types.ObjectId(idAsString))
     .select({
-      _id: 0,
       genre: 1, title: 1, numberInStock: 1, dailyRentalRate: 1,
     })
 }
