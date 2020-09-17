@@ -4,6 +4,7 @@ const { User } = require('../users/user')
 const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 router.post('/', async (request, response) => {
   let validationResult = validateAsLoginAttempt(request.body)
@@ -16,7 +17,8 @@ router.post('/', async (request, response) => {
     const isCorrectPassword = await bcrypt.compare(request.body.password, existingUser.password)
     if (!isCorrectPassword) return response.status(400).send('Invalid email or password.')
 
-    response.send(true)
+    const token = jwt.sign({ _id: existingUser._id }, 'jwtPrivateKey')
+    response.send(token)
   } catch (error) {
     errorLogger(error.message)
     return response.status(500).send('User creation was unsuccessful.')
