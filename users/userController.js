@@ -5,6 +5,12 @@ const express = require('express')
 const router = express.Router()
 const _ = require('lodash')
 const bcrypt = require('bcrypt')
+const jwtValidationMiddleware = require('../auth/jwtValidationMiddleware')
+
+router.get('/me', jwtValidationMiddleware, async (request, response) => {
+  const user = await User.findById(request.user._id).select('-password')
+  response.send(user)
+})
 
 router.post('/', async (request, response) => {
   let validationResult = validateAsUser(request.body)
