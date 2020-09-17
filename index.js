@@ -9,6 +9,7 @@ const customers = require('./customers/customerController')
 const movies = require('./movies/movieController')
 const rentals = require('./rentals/rentalController')
 const users = require('./users/userController')
+const auth = require('./auth/authController')
 const port = process.env.PORT || 3000
 
 const app = express()
@@ -18,6 +19,7 @@ app.use('/api/customers', customers)
 app.use('/api/movies', movies)
 app.use('/api/rentals', rentals)
 app.use('/api/users', users)
+app.use('/api/auth', auth)
 
 const mongoDBOptions = { useNewUrlParser: true, useUnifiedTopology: true }
 mongoose.connect('mongodb://localhost/vidly', mongoDBOptions)
