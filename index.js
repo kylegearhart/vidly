@@ -3,6 +3,7 @@ const dbLogger = require('debug')('app:db')
 const express = require('express')
 const mongoose = require('mongoose')
 const Joi = require('joi')
+const config = require('config')
 Joi.objectId = require('joi-objectid')(Joi)
 const genres = require('./genres/genreController')
 const customers = require('./customers/customerController')
@@ -25,6 +26,11 @@ const mongoDBOptions = { useNewUrlParser: true, useUnifiedTopology: true }
 mongoose.connect('mongodb://localhost/vidly', mongoDBOptions)
   .then(() => dbLogger('Successfully connected to MongoDB database called vidly on localhost'))
   .catch((error) => dbLogger('Failed to connect to vidly MongoDB database on localhost', error))
+
+if (!config.get('jwtPrivateKey')) {
+  console.error('FATAL ERROR: jwtPrivateKey is not defined.')
+  process.exit(1)
+}
 
 app.listen(
   port,
