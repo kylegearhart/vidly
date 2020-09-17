@@ -5,8 +5,6 @@ const express = require('express')
 const router = express.Router()
 const _ = require('lodash')
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const config = require('config')
 
 router.post('/', async (request, response) => {
   let validationResult = validateAsUser(request.body)
@@ -23,7 +21,7 @@ router.post('/', async (request, response) => {
     const savedOrUpdatedUser = await repository.add(newUser)
     if (!savedOrUpdatedUser) return response.status(500).send('User save was unsuccessful.')
 
-    const token = jwt.sign({ _id: savedOrUpdatedUser._id }, config.get('jwtPrivateKey'))
+    const token = savedOrUpdatedUser.generateAuthToken()
     return response.header('x-auth-token', token).send(_.pick(savedOrUpdatedUser, ['name', 'email']))
   } catch (error) {
     errorLogger(error.message)
