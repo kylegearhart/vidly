@@ -4,9 +4,10 @@ const rentalRepository = require('./rentalRepository')
 const customerRepository = require('../customers/customerRepository')
 const movieRepository = require('../movies/movieRepository')
 const express = require('express')
+const jwtValidationMiddleware = require('../auth/jwtValidationMiddleware')
 const router = express.Router()
 
-router.post('/', async (request, response) => {
+router.post('/', jwtValidationMiddleware, async (request, response) => {
   let validationResult = validateAsRental(request.body)
   if (validationResult.error) return response.status(400).send(validationResult.error.message)
 

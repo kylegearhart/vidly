@@ -2,9 +2,10 @@ const errorLogger = require('debug')('app:error')
 const { validateAsCustomer } = require('./customer')
 const repository = require('./customerRepository')
 const express = require('express')
+const jwtValidationMiddleware = require('../auth/jwtValidationMiddleware')
 const router = express.Router()
 
-router.post('/', async (request, response) => {
+router.post('/', jwtValidationMiddleware, async (request, response) => {
   let validationResult = validateAsCustomer(request.body)
   if (validationResult.error) return response.status(400).send(validationResult.error.message)
 
@@ -44,7 +45,7 @@ router.get('/:id', async (request, response) => {
   }
 })
 
-router.put('/:id', async (request, response) => {
+router.put('/:id', jwtValidationMiddleware, async (request, response) => {
   let validationResult = validateAsCustomer(request.body)
   if (validationResult.error) return response.status(400).send(validationResult.error.message)
 
@@ -60,7 +61,7 @@ router.put('/:id', async (request, response) => {
   }
 })
 
-router.delete('/:id', async (request, response) => {
+router.delete('/:id', jwtValidationMiddleware, async (request, response) => {
   try {
     const deletedCustomer = await repository.deleteCustomerWithId(request.params.id)
 
