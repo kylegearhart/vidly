@@ -23,9 +23,10 @@ app.use('/api/users', users)
 app.use('/api/auth', auth)
 
 const mongoDBOptions = { useNewUrlParser: true, useUnifiedTopology: true }
-mongoose.connect('mongodb://localhost/vidly', mongoDBOptions)
-  .then(() => dbLogger('Successfully connected to MongoDB database called vidly on localhost'))
-  .catch((error) => dbLogger('Failed to connect to vidly MongoDB database on localhost', error))
+const databaseURI = config.get('databaseURI')
+mongoose.connect(databaseURI, mongoDBOptions)
+  .then(() => dbLogger(`Successfully connected to Vidly MongoDB database at ${databaseURI}`))
+  .catch((error) => dbLogger(`Failed to connect to Vidly MongoDB database at ${databaseURI}`, error))
 
 if (!config.get('jwtPrivateKey')) {
   console.error('FATAL ERROR: jwtPrivateKey is not defined.')
