@@ -20,7 +20,7 @@ router.post('/', async (request, response) => {
     const duplicatedUser = await User.findOne({ email: request.body.email })
     if (duplicatedUser) return response.status(400).send('User with email already exists.')
 
-    const newUser = _.pick(request.body, ['name', 'email', 'password'])
+    const newUser = _.pick(request.body, ['name', 'email', 'password', 'isAdmin'])
     const salt = await bcrypt.genSalt(10)
     newUser.password = await bcrypt.hash(newUser.password, salt)
 

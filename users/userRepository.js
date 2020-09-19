@@ -5,6 +5,7 @@ function add(newUser) {
     name: newUser.name,
     email: newUser.email,
     password: newUser.password,
+    isAdmin: newUser.isAdmin,
   })
 
   return userToAdd.save()
