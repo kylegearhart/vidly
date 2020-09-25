@@ -58,6 +58,29 @@ describe('api/genres', () => {
   })
 
   describe('POST /', () => {
+    it('saves the genre if it is valid', async () => {
+      const token = new User({ isAdmin: true }).generateAuthToken()
+      const response = await request(server)
+        .post('/api/genres')
+        .set('x-auth-token', token)
+        .send({ name: 'validGenreName' })
+
+      expect(response.status).toEqual(200)
+      const savedGenre = Genre.find({ name: 'validGenreName' })
+      expect(savedGenre).not.toBeNull()
+    })
+
+    it('returns the saved genre if it is valid', async () => {
+      const token = new User({ isAdmin: true }).generateAuthToken()
+      const response = await request(server)
+        .post('/api/genres')
+        .set('x-auth-token', token)
+        .send({ name: 'validGenreName' })
+
+      expect(response.body).toHaveProperty('_id')
+      expect(response.body).toHaveProperty('name', 'validGenreName')
+    })
+
     it('should return a 401 if client is not logged in', async () => {
       const response = await request(server).post('/api/genres').send({ name: 'genre1' })
 
