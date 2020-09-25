@@ -2,9 +2,9 @@ const errorLogger = require('debug')('app:error')
 const { validateAsGenre } = require('./genre')
 const repository = require('./genreRepository')
 const express = require('express')
-const mongoose = require('mongoose')
 const jwtValidationMiddleware = require('../auth/jwtValidationMiddleware')
 const allowOnlyAdminMiddleware = require('../auth/allowOnlyAdminMiddleware')
+const validateObjectIdMiddleware = require('../validateObjectIdMiddleware')
 const router = express.Router()
 
 router.post('/', [jwtValidationMiddleware, allowOnlyAdminMiddleware], async (request, response) => {
@@ -34,12 +34,8 @@ router.get('/', async (request, response) => {
   }
 })
 
-router.get('/:id', async (request, response) => {
+router.get('/:id', validateObjectIdMiddleware, async (request, response) => {
   try {
-    if (!mongoose.Types.ObjectId.isValid(request.params.id)) {
-      return response.status(404).send('Invalid genre ID.')
-    }
-
     const genreWithId = await repository.genreForId(request.params.id)
 
     if (!genreWithId) return response.status(404).send('A genre with the given Id does not exist.')
