@@ -33,9 +33,11 @@ if (!config.get('jwtPrivateKey')) {
   process.exit(1)
 }
 
-app.listen(
+const server = app.listen(
   port,
   () => {
     httpLogger(`Vidly launched and listening on port ${port}.`)
   },
 )
+
+module.exports = server
