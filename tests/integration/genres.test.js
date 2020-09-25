@@ -55,4 +55,12 @@ describe('api/genres', () => {
       expect(response.status).toEqual(404)
     })
   })
+
+  describe('POST /', () => {
+    it('should return a 401 if client is not logged in', async () => {
+      const response = await request(server).post('/api/genres').send({ name: 'genre1' })
+
+      expect(response.status).toEqual(401)
+    })
+  })
 })
