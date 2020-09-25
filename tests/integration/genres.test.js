@@ -1,5 +1,6 @@
 const request = require('supertest')
 const { Genre } = require('../../genres/genre')
+const { User } = require('../../users/user')
 
 describe('api/genres', () => {
   let server
@@ -61,6 +62,26 @@ describe('api/genres', () => {
       const response = await request(server).post('/api/genres').send({ name: 'genre1' })
 
       expect(response.status).toEqual(401)
+    })
+
+    it('should return a 400 if genre is less than 5 characters', async () => {
+      const token = new User({ isAdmin: true }).generateAuthToken()
+      const response = await request(server)
+        .post('/api/genres')
+        .set('x-auth-token', token)
+        .send({ name: new Array(5).join('a') })
+
+      expect(response.status).toEqual(400)
+    })
+
+    it('should return a 400 if genre is more than 50 characters', async () => {
+      const token = new User({ isAdmin: true }).generateAuthToken()
+      const response = await request(server)
+        .post('/api/genres')
+        .set('x-auth-token', token)
+        .send({ name: new Array(52).join('a') })
+
+      expect(response.status).toEqual(400)
     })
   })
 })
