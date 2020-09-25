@@ -58,12 +58,23 @@ describe('api/genres', () => {
   })
 
   describe('POST /', () => {
-    it('saves the genre if it is valid', async () => {
-      const token = new User({ isAdmin: true }).generateAuthToken()
-      const response = await request(server)
+    let genreName;
+    let authToken;
+
+    beforeEach(() => {
+      genreName = 'validGenreName'
+      authToken = new User({ isAdmin: true }).generateAuthToken()
+    })
+
+    async function makePost() {
+      return await request(server)
         .post('/api/genres')
-        .set('x-auth-token', token)
-        .send({ name: 'validGenreName' })
+        .set('x-auth-token', authToken)
+        .send({ name: genreName })
+    }
+
+    it('saves the genre if it is valid', async () => {
+      const response = await makePost()
 
       expect(response.status).toEqual(200)
       const savedGenre = Genre.find({ name: 'validGenreName' })
@@ -71,38 +82,32 @@ describe('api/genres', () => {
     })
 
     it('returns the saved genre if it is valid', async () => {
-      const token = new User({ isAdmin: true }).generateAuthToken()
-      const response = await request(server)
-        .post('/api/genres')
-        .set('x-auth-token', token)
-        .send({ name: 'validGenreName' })
+      const response = await makePost()
 
       expect(response.body).toHaveProperty('_id')
       expect(response.body).toHaveProperty('name', 'validGenreName')
     })
 
     it('should return a 401 if client is not logged in', async () => {
-      const response = await request(server).post('/api/genres').send({ name: 'genre1' })
+      authToken = ''
+
+      const response = await makePost()
 
       expect(response.status).toEqual(401)
     })
 
     it('should return a 400 if genre is less than 5 characters', async () => {
-      const token = new User({ isAdmin: true }).generateAuthToken()
-      const response = await request(server)
-        .post('/api/genres')
-        .set('x-auth-token', token)
-        .send({ name: new Array(5).join('a') })
+      genreName = new Array(5).join('a')
+
+      const response = await makePost()
 
       expect(response.status).toEqual(400)
     })
 
     it('should return a 400 if genre is more than 50 characters', async () => {
-      const token = new User({ isAdmin: true }).generateAuthToken()
-      const response = await request(server)
-        .post('/api/genres')
-        .set('x-auth-token', token)
-        .send({ name: new Array(52).join('a') })
+      genreName = new Array(52).join('a')
+
+      const response = await makePost()
 
       expect(response.status).toEqual(400)
     })
